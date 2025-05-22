@@ -1,4 +1,4 @@
-package com.example.EcoMarket.Model;
+package com.EcoMarket.clientes.Model;
 
 public class Cliente {
     private String nombre;
