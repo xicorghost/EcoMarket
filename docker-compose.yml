@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   clientes-db:
     image: postgres:15
@@ -22,6 +24,12 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://clientes-db:5432/clientes_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
+
+  productos:
+    build: ./productos
+    container_name: productos
+    ports:
+      - "5001:5001"
 
 volumes:
   clientes_data:

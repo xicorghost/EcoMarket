@@ -43,14 +43,14 @@
             <version>42.7.1</version>
         </dependency>
 
-        <!-- Lombok (opcional, si lo vas a usar) -->
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <!-- Test (mantenido pero con tests desactivados) -->
+        <!-- Spring Boot Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
