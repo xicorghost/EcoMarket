@@ -5,6 +5,7 @@ import com.ecomarket.productos.service.ProductoService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/productos")
@@ -17,17 +18,17 @@ public class ProductoController {
     }
 
     @GetMapping
-    public List<Producto> listar() {
+    public List<Producto> obtenerTodos() {
         return servicio.obtenerTodos();
     }
 
     @GetMapping("/{id}")
-    public Producto obtener(@PathVariable Long id) {
-        return servicio.obtenerPorId(id).orElse(null);
+    public Optional<Producto> obtenerPorId(@PathVariable Long id) {
+        return servicio.obtenerPorId(id);
     }
 
     @PostMapping
-    public Producto crear(@RequestBody Producto producto) {
+    public Producto guardar(@RequestBody Producto producto) {
         return servicio.guardar(producto);
     }
 
