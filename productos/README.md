@@ -5,7 +5,7 @@ Opción 1: Ejecutar directamente (JAR)
 cd src/main/java/com/EcoMarket/productos
 
 # Compilar el proyecto
-./mvnw clean package
+mvn clean package
 
 # Ejecutar el JAR (ajustar nombre si es necesario)
 java -jar target/productos-0.0.1-SNAPSHOT.jar
