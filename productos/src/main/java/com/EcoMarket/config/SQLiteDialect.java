@@ -1,6 +1,4 @@
-package com.ecomarket.productos.util;
-
-import java.sql.Types;
+package com.EcoMarket.config;
 
 import org.hibernate.dialect.Dialect;
 import org.hibernate.dialect.identity.IdentityColumnSupport;
@@ -8,9 +6,14 @@ import org.hibernate.dialect.identity.IdentityColumnSupportImpl;
 import org.hibernate.dialect.function.StandardSQLFunction;
 import org.hibernate.dialect.function.SQLFunctionTemplate;
 import org.hibernate.dialect.function.VarArgsSQLFunction;
+import org.hibernate.HibernateException;
+import org.hibernate.type.StringType;
+import org.hibernate.type.BooleanType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.LongType;
-import org.hibernate.type.StringType;
+import org.hibernate.type.DoubleType;
+
+import java.sql.Types;
 
 public class SQLiteDialect extends Dialect {
 
@@ -56,7 +59,7 @@ public class SQLiteDialect extends Dialect {
 
     @Override
     public boolean hasAlterTable() {
-        return false; // SQLite no soporta ALTER TABLE DROP COLUMN
+        return false; // SQLite does not support alter table drop column
     }
 
     @Override
@@ -66,18 +69,19 @@ public class SQLiteDialect extends Dialect {
 
     @Override
     public String getDropForeignKeyString() {
-        return "";
+        throw new UnsupportedOperationException("No drop foreign key syntax supported by SQLiteDialect");
     }
 
     @Override
-    public String getAddForeignKeyConstraintString(String constraintName, String[] foreignKey, String referencedTable,
-                                                  String[] primaryKey, boolean referencesPrimaryKey) {
-        return "";
+    public String getAddForeignKeyConstraintString(String constraintName,
+                                                   String[] foreignKey, String referencedTable, String[] primaryKey,
+                                                   boolean referencesPrimaryKey) {
+        throw new UnsupportedOperationException("No add foreign key syntax supported by SQLiteDialect");
     }
 
     @Override
     public String getAddPrimaryKeyConstraintString(String constraintName) {
-        return "";
+        throw new UnsupportedOperationException("No add primary key syntax supported by SQLiteDialect");
     }
 
     @Override
@@ -122,10 +126,20 @@ public class SQLiteDialect extends Dialect {
 
     @Override
     public String getLimitString(String query, boolean hasOffset) {
-        return new StringBuilder(query.length() + 20)
+        return new StringBuffer(query.length() + 20)
             .append(query)
             .append(hasOffset ? " limit ? offset ?" : " limit ?")
             .toString();
+    }
+
+    @Override
+    public boolean supportsVariableLimit() {
+        return true;
+    }
+
+    @Override
+    public boolean bindLimitParametersInReverseOrder() {
+        return true;
     }
 
     @Override
@@ -134,34 +148,24 @@ public class SQLiteDialect extends Dialect {
     }
 
     @Override
-    public boolean supportsOuterJoinForUpdate() {
-        return false;
-    }
-
-    @Override
-    public String getSelectGUIDString() {
-        return "select hex(randomblob(16))";
-    }
-
-    @Override
     public boolean supportsCascadeDelete() {
         return false;
     }
-}
 
-class SQLiteIdentityColumnSupport extends IdentityColumnSupportImpl {
-    @Override
-    public boolean supportsIdentityColumns() {
-        return true;
-    }
+    public static class SQLiteIdentityColumnSupport extends IdentityColumnSupportImpl {
+        @Override
+        public boolean supportsIdentityColumns() {
+            return true;
+        }
 
-    @Override
-    public String getIdentitySelectString(String table, String column, int type) {
-        return "select last_insert_rowid()";
-    }
+        @Override
+        public String getIdentitySelectString(String table, String column, int type) throws HibernateException {
+            return "select last_insert_rowid()";
+        }
 
-    @Override
-    public String getIdentityColumnString(int type) {
-        return "integer";
+        @Override
+        public String getIdentityColumnString(int type) throws HibernateException {
+            return "integer";
+        }
     }
 }

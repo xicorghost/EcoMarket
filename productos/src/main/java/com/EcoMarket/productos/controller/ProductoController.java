@@ -1,7 +1,8 @@
-package com.ecomarket.productos.controller;
+package com.EcoMarket.productos.controller;
 
-import com.ecomarket.productos.model.Producto;
-import com.ecomarket.productos.service.ProductoService;
+import com.EcoMarket.productos.model.Producto;
+import com.EcoMarket.productos.repository.ProductoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,29 +12,34 @@ import java.util.Optional;
 @RequestMapping("/productos")
 public class ProductoController {
 
-    private final ProductoService servicio;
-
-    public ProductoController(ProductoService servicio) {
-        this.servicio = servicio;
-    }
+    @Autowired
+    private ProductoRepository productoRepository;
 
     @GetMapping
     public List<Producto> obtenerTodos() {
-        return servicio.obtenerTodos();
+        return productoRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public Optional<Producto> obtenerPorId(@PathVariable Long id) {
-        return servicio.obtenerPorId(id);
+    public Producto obtenerPorId(@PathVariable Long id) {
+        Optional<Producto> producto = productoRepository.findById(id);
+        return producto.orElse(null);
     }
 
     @PostMapping
-    public Producto guardar(@RequestBody Producto producto) {
-        return servicio.guardar(producto);
+    public Producto crearProducto(@RequestBody Producto producto) {
+        return productoRepository.save(producto);
+    }
+
+    @PutMapping("/{id}")
+    public String actualizarProducto(@PathVariable Long id, @RequestBody Producto producto) {
+        boolean actualizado = productoRepository.update(id, producto);
+        return actualizado ? "Producto actualizado" : "Producto no encontrado";
     }
 
     @DeleteMapping("/{id}")
-    public void eliminar(@PathVariable Long id) {
-        servicio.eliminar(id);
+    public String eliminarProducto(@PathVariable Long id) {
+        boolean eliminado = productoRepository.deleteById(id);
+        return eliminado ? "Producto eliminado" : "Producto no encontrado";
     }
 }
