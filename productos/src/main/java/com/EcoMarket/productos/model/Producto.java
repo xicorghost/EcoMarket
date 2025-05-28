@@ -2,14 +2,12 @@ package com.ecomarket.productos.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 
 @Entity
 public class Producto {
 
     @Id
-    private String codigo;  // Esto indica que 'codigo' es la clave primaria
+    private String codigo;  // Clave primaria
 
     private String nombre;
     private double precio;
@@ -24,7 +22,31 @@ public class Producto {
         this.precio = precio;
     }
 
-    // getters y setters (igual que antes)
+    // Getters
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    // Setters
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
 
     @Override
     public String toString() {
