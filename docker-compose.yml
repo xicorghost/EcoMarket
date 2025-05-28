@@ -25,12 +25,30 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
 
+  productos-db:
+    image: postgres:15
+    container_name: productos-db
+    environment:
+      POSTGRES_DB: productos_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - productos_data:/var/lib/postgresql/data
+
   productos-service:
     build: ./productos
     container_name: productos-service
+    depends_on:
+      - productos-db
     ports:
-      - "5001:5001"
-    # Si usas base de datos, agrega depends_on y variables de entorno según sea necesario
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://productos-db:5432/productos_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
 
 volumes:
   clientes_data:
+  productos_data:
