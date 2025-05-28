@@ -24,14 +24,22 @@ public class ClienteService {
     }
 
     public Cliente save(Cliente cliente) {
-        return clienteRepository.save(cliente);
+        try {
+            return clienteRepository.save(cliente);
+        } catch (IllegalArgumentException e) {
+            throw e;  // La excepción la maneja el controller
+        }
     }
 
-    public boolean update(String email, Cliente cliente) {
-        return clienteRepository.update(email, cliente);
+    public boolean update(int id, Cliente cliente) {
+        try {
+            return clienteRepository.update(id, cliente);
+        } catch (IllegalArgumentException e) {
+            throw e;  // La excepción la maneja el controller
+        }
     }
 
-    public boolean deleteByEmail(String email) {
-        return clienteRepository.deleteByEmail(email);
+    public boolean deleteById(int id) {
+        return clienteRepository.deleteById(id);
     }
 }

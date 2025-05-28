@@ -10,6 +10,7 @@ import java.util.Optional;
 @Repository
 public class ProductoRepository {
     private final List<Producto> productos = new ArrayList<>();
+    private static int contadorCodigo = 1;  // contador para generar códigos numéricos
 
     public List<Producto> findAll() {
         return new ArrayList<>(productos);
@@ -20,6 +21,9 @@ public class ProductoRepository {
     }
 
     public Producto save(Producto producto) {
+        if (producto.getCodigo() == null || producto.getCodigo().isEmpty()) {
+            producto.setCodigo(String.valueOf(contadorCodigo++));  // asignar código incremental
+        }
         productos.add(producto);
         return producto;
     }
@@ -30,7 +34,7 @@ public class ProductoRepository {
             Producto p = existing.get();
             p.setNombre(producto.getNombre());
             p.setPrecio(producto.getPrecio());
-            p.setCodigo(producto.getCodigo());
+            // No cambiar el código
             return true;
         }
         return false;

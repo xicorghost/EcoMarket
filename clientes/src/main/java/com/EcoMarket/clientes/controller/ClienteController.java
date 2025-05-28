@@ -30,22 +30,32 @@ public class ClienteController {
     }
 
     @PostMapping
-    public Cliente createCliente(@RequestBody Cliente cliente) {
-        return clienteService.save(cliente);
-    }
-
-    @PutMapping("/{email}")
-    public ResponseEntity<Cliente> updateCliente(@PathVariable String email, @RequestBody Cliente cliente) {
-        boolean updated = clienteService.update(email, cliente);
-        if (updated) {
-            return ResponseEntity.ok(cliente);
+    public ResponseEntity<?> createCliente(@RequestBody Cliente cliente) {
+        try {
+            Cliente nuevo = clienteService.save(cliente);
+            return ResponseEntity.ok(nuevo);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(409).body(e.getMessage());
         }
-        return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{email}")
-    public ResponseEntity<Void> deleteCliente(@PathVariable String email) {
-        boolean deleted = clienteService.deleteByEmail(email);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCliente(@PathVariable int id, @RequestBody Cliente cliente) {
+        try {
+            boolean updated = clienteService.update(id, cliente);
+            if (updated) {
+                return ResponseEntity.ok(cliente);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(409).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCliente(@PathVariable int id) {
+        boolean deleted = clienteService.deleteById(id);
         if (deleted) {
             return ResponseEntity.noContent().build();
         }
