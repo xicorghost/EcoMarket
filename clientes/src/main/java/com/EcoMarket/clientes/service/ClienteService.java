@@ -27,19 +27,19 @@ public class ClienteService {
         try {
             return clienteRepository.save(cliente);
         } catch (IllegalArgumentException e) {
-            throw e;  // La excepción la maneja el controller
+            throw e;
         }
     }
 
-    public boolean update(int id, Cliente cliente) {
+    public boolean update(String email, Cliente cliente) {
         try {
-            return clienteRepository.update(id, cliente);
+            return clienteRepository.update(email, cliente);
         } catch (IllegalArgumentException e) {
-            throw e;  // La excepción la maneja el controller
+            throw e;
         }
     }
 
-    public boolean deleteById(int id) {
-        return clienteRepository.deleteById(id);
+    public boolean deleteByEmail(String email) {
+        return clienteRepository.deleteByEmail(email);
     }
 }

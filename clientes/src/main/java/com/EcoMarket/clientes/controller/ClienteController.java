@@ -39,10 +39,10 @@ public class ClienteController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateCliente(@PathVariable int id, @RequestBody Cliente cliente) {
+    @PutMapping("/{email}")
+    public ResponseEntity<?> updateCliente(@PathVariable String email, @RequestBody Cliente cliente) {
         try {
-            boolean updated = clienteService.update(id, cliente);
+            boolean updated = clienteService.update(email, cliente);
             if (updated) {
                 return ResponseEntity.ok(cliente);
             } else {
@@ -53,9 +53,9 @@ public class ClienteController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCliente(@PathVariable int id) {
-        boolean deleted = clienteService.deleteById(id);
+    @DeleteMapping("/{email}")
+    public ResponseEntity<Void> deleteCliente(@PathVariable String email) {
+        boolean deleted = clienteService.deleteByEmail(email);
         if (deleted) {
             return ResponseEntity.noContent().build();
         }
