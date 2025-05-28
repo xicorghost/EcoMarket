@@ -1,61 +1,54 @@
 package com.ecomarket.productos.controller;
 
 import com.ecomarket.productos.model.Producto;
-import com.ecomarket.productos.repository.ProductoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ecomarket.productos.service.ProductoService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/productos")
 public class ProductoController {
 
-    @Autowired
-    private ProductoRepository productoRepository;
+    private final ProductoService productoService;
 
-    @GetMapping
-    public List<Producto> obtenerTodos() {
-        return productoRepository.findAll();
+    public ProductoController(ProductoService productoService) {
+        this.productoService = productoService;
     }
 
-    @GetMapping("/{id}")
-    public Producto obtenerPorId(@PathVariable Long id) {
-        Optional<Producto> producto = productoRepository.findById(id);
-        return producto.orElse(null);
+    @GetMapping
+    public List<Producto> getAllProductos() {
+        return productoService.findAll();
+    }
+
+    @GetMapping("/{codigo}")
+    public ResponseEntity<Producto> getProductoByCodigo(@PathVariable String codigo) {
+        return productoService.findByCodigo(codigo)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Producto crearProducto(@RequestBody Producto producto) {
-        return productoRepository.save(producto);
+    public Producto createProducto(@RequestBody Producto producto) {
+        return productoService.save(producto);
     }
 
-    @PutMapping("/{id}")
-    public String actualizarProducto(@PathVariable Long id, @RequestBody Producto productoActualizado) {
-        Optional<Producto> productoExistente = productoRepository.findById(id);
-        if (productoExistente.isPresent()) {
-            Producto producto = productoExistente.get();
-            // Aquí actualizas cada campo que necesites
-            producto.setNombre(productoActualizado.getNombre());
-            producto.setPrecio(productoActualizado.getPrecio());
-            producto.setDescripcion(productoActualizado.getDescripcion());
-            // Agregar más campos según modelo
-
-            productoRepository.save(producto);
-            return "Producto actualizado";
-        } else {
-            return "Producto no encontrado";
+    @PutMapping("/{codigo}")
+    public ResponseEntity<Producto> updateProducto(@PathVariable String codigo, @RequestBody Producto producto) {
+        boolean updated = productoService.update(codigo, producto);
+        if (updated) {
+            return ResponseEntity.ok(producto);
         }
+        return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id}")
-    public String eliminarProducto(@PathVariable Long id) {
-        if (productoRepository.existsById(id)) {
-            productoRepository.deleteById(id);
-            return "Producto eliminado";
-        } else {
-            return "Producto no encontrado";
+    @DeleteMapping("/{codigo}")
+    public ResponseEntity<Void> deleteProducto(@PathVariable String codigo) {
+        boolean deleted = productoService.deleteByCodigo(codigo);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
         }
+        return ResponseEntity.notFound().build();
     }
 }

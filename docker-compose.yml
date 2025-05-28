@@ -14,7 +14,7 @@ services:
       - clientes_data:/var/lib/postgresql/data
 
   clientes-service:
-    build: .
+    build: ./clientes
     container_name: clientes-service
     depends_on:
       - clientes-db
@@ -25,11 +25,12 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
 
-  productos:
+  productos-service:
     build: ./productos
-    container_name: productos
+    container_name: productos-service
     ports:
       - "5001:5001"
+    # Si usas base de datos, agrega depends_on y variables de entorno según sea necesario
 
 volumes:
   clientes_data:
