@@ -1,7 +1,7 @@
-package com.EcoMarket.productos.controller;
+package com.ecomarket.productos.controller;
 
-import com.EcoMarket.productos.model.Producto;
-import com.EcoMarket.productos.repository.ProductoRepository;
+import com.ecomarket.productos.model.Producto;
+import com.ecomarket.productos.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,14 +32,30 @@ public class ProductoController {
     }
 
     @PutMapping("/{id}")
-    public String actualizarProducto(@PathVariable Long id, @RequestBody Producto producto) {
-        boolean actualizado = productoRepository.update(id, producto);
-        return actualizado ? "Producto actualizado" : "Producto no encontrado";
+    public String actualizarProducto(@PathVariable Long id, @RequestBody Producto productoActualizado) {
+        Optional<Producto> productoExistente = productoRepository.findById(id);
+        if (productoExistente.isPresent()) {
+            Producto producto = productoExistente.get();
+            // Aquí actualizas cada campo que necesites
+            producto.setNombre(productoActualizado.getNombre());
+            producto.setPrecio(productoActualizado.getPrecio());
+            producto.setDescripcion(productoActualizado.getDescripcion());
+            // Agregar más campos según modelo
+
+            productoRepository.save(producto);
+            return "Producto actualizado";
+        } else {
+            return "Producto no encontrado";
+        }
     }
 
     @DeleteMapping("/{id}")
     public String eliminarProducto(@PathVariable Long id) {
-        boolean eliminado = productoRepository.deleteById(id);
-        return eliminado ? "Producto eliminado" : "Producto no encontrado";
+        if (productoRepository.existsById(id)) {
+            productoRepository.deleteById(id);
+            return "Producto eliminado";
+        } else {
+            return "Producto no encontrado";
+        }
     }
 }
