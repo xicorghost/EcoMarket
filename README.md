@@ -22,6 +22,7 @@ Este microservicio permite gestionar clientes en memoria (sin base de datos) usa
 
 2. Ejecuta el microservicio:
    java -jar target/clientes-service-0.0.1-SNAPSHOT.jar
+                    productos-service-0.0.1-SNAPSHOT.jar para productos
 
 El servicio estará disponible en:  
 http://localhost:8080
