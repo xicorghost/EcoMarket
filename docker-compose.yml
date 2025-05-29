@@ -19,7 +19,7 @@ services:
     depends_on:
       - clientes-db
     ports:
-      - "8080:8080"
+      - "8088:8080"  # <- cambiado para exponer en 8088
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://clientes-db:5432/clientes_db
       SPRING_DATASOURCE_USERNAME: postgres

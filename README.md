@@ -24,7 +24,7 @@ Este microservicio permite gestionar clientes en memoria (sin base de datos) usa
    java -jar target/clientes-service-0.0.1-SNAPSHOT.jar
 
 El servicio estará disponible en:  
-http://localhost:8080
+http://localhost:8088
 
 ### Con Docker
 
@@ -42,10 +42,10 @@ docker-compose up --build
 ### Clientes
 
 - Obtener todos los clientes  
-  GET http://localhost:8080/clientes
+  GET http://localhost:8088/clientes
 
 - Obtener cliente por email  
-  GET http://localhost:8080/clientes/{email}
+  GET http://localhost:8088/clientes/{email}
 
 - Crear cliente  
   POST http://localhost:8080/clientes  
