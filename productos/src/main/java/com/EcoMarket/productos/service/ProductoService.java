@@ -9,29 +9,38 @@ import java.util.Optional;
 
 @Service
 public class ProductoService {
+
     private final ProductoRepository productoRepository;
 
     public ProductoService(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
     }
 
-    public List<Producto> findAll() {
+    public List<Producto> obtenerTodos() {
         return productoRepository.findAll();
     }
 
-    public Optional<Producto> findByCodigo(String codigo) {
+    public Optional<Producto> obtenerPorCodigo(String codigo) {
         return productoRepository.findByCodigo(codigo);
     }
 
-    public Producto save(Producto producto) {
+    public Producto guardarProducto(Producto producto) {
         return productoRepository.save(producto);
     }
 
-    public boolean update(String codigo, Producto producto) {
-        return productoRepository.update(codigo, producto);
+    public boolean actualizarProducto(String codigo, Producto productoActualizado) {
+        return productoRepository.findById(codigo).map(p -> {
+            p.setNombre(productoActualizado.getNombre());
+            p.setPrecio(productoActualizado.getPrecio());
+            productoRepository.save(p);
+            return true;
+        }).orElse(false);
     }
 
-    public boolean deleteByCodigo(String codigo) {
-        return productoRepository.deleteByCodigo(codigo);
+    public boolean eliminarPorCodigo(String codigo) {
+        return productoRepository.findById(codigo).map(p -> {
+            productoRepository.delete(p);
+            return true;
+        }).orElse(false);
     }
 }

@@ -19,24 +19,24 @@ public class ProductoController {
 
     @GetMapping
     public List<Producto> getAllProductos() {
-        return productoService.findAll();
+        return productoService.obtenerTodos();
     }
 
     @GetMapping("/{codigo}")
     public ResponseEntity<Producto> getProductoByCodigo(@PathVariable String codigo) {
-        return productoService.findByCodigo(codigo)
+        return productoService.obtenerPorCodigo(codigo)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public Producto createProducto(@RequestBody Producto producto) {
-        return productoService.save(producto);
+        return productoService.guardarProducto(producto);
     }
 
     @PutMapping("/{codigo}")
     public ResponseEntity<Producto> updateProducto(@PathVariable String codigo, @RequestBody Producto producto) {
-        boolean updated = productoService.update(codigo, producto);
+        boolean updated = productoService.actualizarProducto(codigo, producto);
         if (updated) {
             return ResponseEntity.ok(producto);
         }
@@ -45,7 +45,7 @@ public class ProductoController {
 
     @DeleteMapping("/{codigo}")
     public ResponseEntity<Void> deleteProducto(@PathVariable String codigo) {
-        boolean deleted = productoService.deleteByCodigo(codigo);
+        boolean deleted = productoService.eliminarPorCodigo(codigo);
         if (deleted) {
             return ResponseEntity.noContent().build();
         }
