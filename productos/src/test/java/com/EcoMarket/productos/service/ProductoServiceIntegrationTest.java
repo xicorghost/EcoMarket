@@ -1,6 +1,10 @@
 package com.ecomarket.productos.service;
 
 import com.ecomarket.productos.model.Producto;
+import com.ecomarket.productos.service.ProductoService;
+
+import com.ecomarket.productos.service.ProductoService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

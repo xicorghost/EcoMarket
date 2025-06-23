@@ -1,9 +1,10 @@
 package com.ecomarket.productos.controller;
 
-import com.ecomarket.productos.model.Producto;
-import com.ecomarket.productos.service.ProductoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.ecomarket.productos.model.Producto;
+import com.ecomarket.productos.service.ProductoService;
 
 import java.util.List;
 

@@ -1,8 +1,9 @@
 package com.ecomarket.productos.repository;
 
-import com.ecomarket.productos.model.Producto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.ecomarket.productos.model.Producto;
 
 import java.util.Optional;
 
