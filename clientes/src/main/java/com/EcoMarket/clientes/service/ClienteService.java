@@ -24,22 +24,37 @@ public class ClienteService {
     }
 
     public Cliente save(Cliente cliente) {
-        try {
-            return clienteRepository.save(cliente);
-        } catch (IllegalArgumentException e) {
-            throw e;
+        if (clienteRepository.findByEmail(cliente.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Ya existe un cliente con ese email");
         }
+        return clienteRepository.save(cliente);
     }
 
     public boolean update(String email, Cliente cliente) {
-        try {
-            return clienteRepository.update(email, cliente);
-        } catch (IllegalArgumentException e) {
-            throw e;
+        Optional<Cliente> existingCliente = clienteRepository.findByEmail(email);
+        if (existingCliente.isPresent()) {
+            Cliente c = existingCliente.get();
+
+            if (!email.equals(cliente.getEmail()) &&
+                clienteRepository.findByEmail(cliente.getEmail()).isPresent()) {
+                throw new IllegalArgumentException("Ya existe un cliente con ese email");
+            }
+
+            c.setNombre(cliente.getNombre());
+            c.setEmail(cliente.getEmail());
+            c.setTelefono(cliente.getTelefono());
+            clienteRepository.save(c);
+            return true;
         }
+        return false;
     }
 
     public boolean deleteByEmail(String email) {
-        return clienteRepository.deleteByEmail(email);
+        Optional<Cliente> cliente = clienteRepository.findByEmail(email);
+        if (cliente.isPresent()) {
+            clienteRepository.delete(cliente.get());
+            return true;
+        }
+        return false;
     }
 }

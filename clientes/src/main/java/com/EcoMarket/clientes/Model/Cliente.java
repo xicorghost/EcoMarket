@@ -1,25 +1,36 @@
 package com.EcoMarket.clientes.Model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "clientes")
 public class Cliente {
-    private int id;  // nuevo ID incremental
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     private String nombre;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
     private String telefono;
 
-    public Cliente() {}  // Constructor vacío
+    public Cliente() {}
 
-    public Cliente(int id, String nombre, String email, String telefono) {
+    public Cliente(Integer id, String nombre, String email, String telefono) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
         this.telefono = telefono;
     }
 
-    // Getters y setters
-    public int getId() {
+    // Getters y setters...
+    public Integer getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     public String getNombre() {
@@ -44,10 +55,10 @@ public class Cliente {
     @Override
     public String toString() {
         return "Cliente{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", email='" + email + '\'' +
-                ", telefono='" + telefono + '\'' +
-                '}';
+               "id=" + id +
+               ", nombre='" + nombre + '\'' +
+               ", email='" + email + '\'' +
+               ", telefono='" + telefono + '\'' +
+               '}';
     }
 }
