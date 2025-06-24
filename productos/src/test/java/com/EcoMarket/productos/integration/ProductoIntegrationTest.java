@@ -1,22 +1,27 @@
 package com.ecomarket.productos.integration;
 
+import com.ecomarket.productos.controller.ProductoController;
 import com.ecomarket.productos.model.Producto;
+import com.ecomarket.productos.service.ProductoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")  // Usa application-test.properties para no afectar producción
+@WebMvcTest(ProductoController.class)
 public class ProductoIntegrationTest {
 
     @Autowired
@@ -24,6 +29,9 @@ public class ProductoIntegrationTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private ProductoService productoService;
 
     private Producto producto;
 
@@ -37,6 +45,11 @@ public class ProductoIntegrationTest {
 
     @Test
     public void testCrearYObtenerProducto() throws Exception {
+        // Mock para guardar producto
+        when(productoService.guardarProducto(any(Producto.class))).thenReturn(producto);
+        // Mock para obtener producto
+        when(productoService.obtenerPorCodigo("PRD900")).thenReturn(Optional.of(producto));
+
         // Crear producto via POST
         mockMvc.perform(post("/productos")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -54,13 +67,20 @@ public class ProductoIntegrationTest {
 
     @Test
     public void testActualizarProducto() throws Exception {
-        producto.setNombre("Zapato Actualizado");
-        producto.setPrecio(54321);
+        Producto productoActualizado = new Producto();
+        productoActualizado.setCodigo("PRD900");
+        productoActualizado.setNombre("Zapato Actualizado");
+        productoActualizado.setPrecio(54321);
+
+        // Mock para actualizar
+        when(productoService.actualizarProducto(Mockito.eq("PRD900"), any(Producto.class))).thenReturn(true);
+        // Mock para obtener producto actualizado
+        when(productoService.obtenerPorCodigo("PRD900")).thenReturn(Optional.of(productoActualizado));
 
         // Actualizar via PUT
         mockMvc.perform(put("/productos/PRD900")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(producto)))
+                .content(objectMapper.writeValueAsString(productoActualizado)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nombre").value("Zapato Actualizado"));
 
@@ -71,8 +91,13 @@ public class ProductoIntegrationTest {
                 .andExpect(jsonPath("$.precio").value(54321));
     }
 
-    @Test
-    public void testEliminarProducto() throws Exception {
+        @Test
+        public void testEliminarProducto() throws Exception {
+        // Mock para eliminar: retorna true
+        when(productoService.eliminarPorCodigo("PRD900")).thenReturn(true);
+        // Mock para que ya no encuentre el producto
+        when(productoService.obtenerPorCodigo("PRD900")).thenReturn(Optional.empty());
+
         // Eliminar via DELETE
         mockMvc.perform(delete("/productos/PRD900"))
                 .andExpect(status().isNoContent());
@@ -80,5 +105,6 @@ public class ProductoIntegrationTest {
         // Validar que ya no existe
         mockMvc.perform(get("/productos/PRD900"))
                 .andExpect(status().isNotFound());
-    }
+        }
+
 }

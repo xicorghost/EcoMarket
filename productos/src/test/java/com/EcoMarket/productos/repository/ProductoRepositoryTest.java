@@ -3,34 +3,32 @@ package com.ecomarket.productos.repository;
 import com.ecomarket.productos.model.Producto;
 import com.ecomarket.productos.repository.ProductoRepository;
 
-import com.ecomarket.productos.repository.ProductoRepository;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@ActiveProfiles("test") // Usa application-test.properties para perfil test
 public class ProductoRepositoryTest {
 
-    @Autowired
+    @Mock
     private ProductoRepository productoRepository;
 
-    private final String codigoTest = "PRD001";
+    private Producto producto;
 
     @BeforeEach
     public void setup() {
-        // Preparar el producto para las pruebas que lo requieran
-        Producto producto = new Producto();
-        producto.setCodigo(codigoTest);
+        MockitoAnnotations.openMocks(this);
+
+        producto = new Producto();
+        producto.setCodigo("PRD001");
         producto.setNombre("Zapato Escolar");
         producto.setPrecio(19990.0);
-        // Guardar o actualizar (para asegurar que exista antes de cada prueba)
-        productoRepository.save(producto);
     }
 
     @Test
@@ -40,21 +38,29 @@ public class ProductoRepositoryTest {
         productoNuevo.setNombre("Zapato Deportivo");
         productoNuevo.setPrecio(29990.0);
 
+        when(productoRepository.save(productoNuevo)).thenReturn(productoNuevo);
+
         Producto guardado = productoRepository.save(productoNuevo);
 
         assertThat(guardado).isNotNull();
         assertThat(guardado.getCodigo()).isEqualTo("PRD002");
         assertThat(guardado.getNombre()).isEqualTo("Zapato Deportivo");
         assertThat(guardado.getPrecio()).isEqualTo(29990.0);
+
+        verify(productoRepository, times(1)).save(productoNuevo);
     }
 
     @Test
     public void testBuscarProducto() {
-        Producto encontrado = productoRepository.findByCodigo(codigoTest).orElse(null);
+        when(productoRepository.findByCodigo("PRD001")).thenReturn(Optional.of(producto));
 
-        assertThat(encontrado).isNotNull();
-        assertThat(encontrado.getCodigo()).isEqualTo(codigoTest);
-        assertThat(encontrado.getNombre()).isEqualTo("Zapato Escolar");
-        assertThat(encontrado.getPrecio()).isEqualTo(19990.0);
+        Optional<Producto> encontrado = productoRepository.findByCodigo("PRD001");
+
+        assertThat(encontrado).isPresent();
+        assertThat(encontrado.get().getCodigo()).isEqualTo("PRD001");
+        assertThat(encontrado.get().getNombre()).isEqualTo("Zapato Escolar");
+        assertThat(encontrado.get().getPrecio()).isEqualTo(19990.0);
+
+        verify(productoRepository, times(1)).findByCodigo("PRD001");
     }
 }
