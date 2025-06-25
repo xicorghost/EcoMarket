@@ -14,9 +14,9 @@
     </parent>
 
     <groupId>com.ecomarket</groupId>
-    <artifactId>productos-service</artifactId>
+    <artifactId>clientes-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>productos-service</name>
+    <name>clientes-service</name>
     <description>Microservicio para gestión de productos de EcoMarket</description>
 
     <properties>
