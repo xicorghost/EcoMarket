@@ -9,13 +9,9 @@ Este microservicio permite gestionar clientes en memoria (sin base de datos) usa
 - Java 17 o superior
 - Maven 3.8 o superior
 
-*(Opcional para Docker: Docker Desktop)*
-
 ---
 
 ## Levantar el microservicio
-
-### Sin Docker
 
 1. Compila el proyecto:
    mvn clean package
@@ -25,15 +21,6 @@ Este microservicio permite gestionar clientes en memoria (sin base de datos) usa
 
 El servicio estará disponible en:  
 http://localhost:8088
-
-### Con Docker
-
-Asegúrate de tener Docker Desktop instalado y corriendo.
-
-Levanta el servicio:  
-docker compose up --build  
-o  
-docker-compose up --build
 
 ---
 
@@ -48,41 +35,41 @@ docker-compose up --build
   GET http://localhost:8088/clientes/{email}
 
 - Crear cliente  
-  POST http://localhost:8080/clientes  
+  POST http://localhost:8088/clientes  
   Content-Type: application/json
 
-  Ejemplos para crear clientes (POST):
+Ejemplos para crear clientes (POST):
 
-  {
-    "nombre": "Juan Pérez",
-    "email": "juan.perez@example.com",
-    "telefono": "123456789"
-  }
+{
+  "nombre": "Juan Pérez",
+  "email": "juan.perez@example.com",
+  "telefono": "123456789"
+}
 
-  {
-    "nombre": "Ana Gómez",
-    "email": "ana.gomez@example.com",
-    "telefono": "987654321"
-  }
+{
+  "nombre": "Ana Gómez",
+  "email": "ana.gomez@example.com",
+  "telefono": "987654321"
+}
 
-  {
-    "nombre": "Luis Martínez",
-    "email": "luis.martinez@example.com",
-    "telefono": "555123456"
-  }
+{
+  "nombre": "Luis Martínez",
+  "email": "luis.martinez@example.com",
+  "telefono": "555123456"
+}
 
-  {
-    "nombre": "María López",
-    "email": "maria.lopez@example.com",
-    "telefono": "444555666"
-  }
+{
+  "nombre": "María López",
+  "email": "maria.lopez@example.com",
+  "telefono": "444555666"
+}
 
 - Actualizar cliente  
-  PUT http://localhost:8080/clientes/{email}  
+  PUT http://localhost:8088/clientes/{email}  
   Content-Type: application/json
 
 - Eliminar cliente  
-  DELETE http://localhost:8080/clientes/{email}
+  DELETE http://localhost:8088/clientes/{email}
 
 ---
 
@@ -97,13 +84,9 @@ Este microservicio permite gestionar productos con base de datos (JPA + SQLite) 
 - Java 17 o superior
 - Maven 3.8 o superior
 
-*(Opcional para Docker: Docker Desktop)*
-
 ---
 
 ## Levantar el microservicio
-
-### Sin Docker
 
 1. Compila el proyecto:
    mvn clean package
@@ -113,15 +96,6 @@ Este microservicio permite gestionar productos con base de datos (JPA + SQLite) 
 
 El servicio estará disponible en:  
 http://localhost:8081
-
-### Con Docker
-
-Asegúrate de tener Docker Desktop instalado y corriendo.
-
-Levanta el servicio:  
-docker compose up --build  
-o  
-docker-compose up --build
 
 ---
 
@@ -139,31 +113,31 @@ docker-compose up --build
   POST http://localhost:8081/productos  
   Content-Type: application/json
 
-  Ejemplos para crear productos (POST):
+Ejemplos para crear productos (POST):
 
-  {
-    "codigo": "P001",
-    "nombre": "Pan Integral",
-    "precio": 1500.0
-  }
+{
+  "codigo": "P001",
+  "nombre": "Pan Integral",
+  "precio": 1500.0
+}
 
-  {
-    "codigo": "P002",
-    "nombre": "Leche Entera",
-    "precio": 1200.0
-  }
+{
+  "codigo": "P002",
+  "nombre": "Leche Entera",
+  "precio": 1200.0
+}
 
-  {
-    "codigo": "P003",
-    "nombre": "Queso Chanco",
-    "precio": 4500.0
-  }
+{
+  "codigo": "P003",
+  "nombre": "Queso Chanco",
+  "precio": 4500.0
+}
 
-  {
-    "codigo": "P004",
-    "nombre": "Manzana Roja",
-    "precio": 800.0
-  }
+{
+  "codigo": "P004",
+  "nombre": "Manzana Roja",
+  "precio": 800.0
+}
 
 - Actualizar producto  
   PUT http://localhost:8081/productos/{codigo}  
@@ -180,12 +154,7 @@ docker-compose up --build
 - Los datos en clientes se almacenan solo en memoria, por lo que se pierden al reiniciar el microservicio.
 - Los productos usan base de datos (SQLite), por lo que los datos persisten mientras la base no se borre.
 - Para detener cualquier microservicio:  
-  - Si lo ejecutaste en terminal, presiona Ctrl + C.  
-  - Si usaste Docker, ejecuta:  
-    docker compose down  
-    o  
-    docker-compose down
-- Puedes probar los endpoints con Postman, Insomnia o tu navegador (solo los GET).
+  - Si lo ejecutaste en terminal, presiona Ctrl + C.
 
 ---
 
@@ -196,18 +165,6 @@ docker-compose up --build
 3. Escribir la URL correspondiente.
 4. Para POST y PUT, ir a la pestaña Body, seleccionar raw y JSON, y pegar uno de los ejemplos JSON.
 5. Hacer clic en Send y revisar la respuesta.
-
----
-
-# Probar microservicios juntos con Docker Compose
-
-Si tienes ambos microservicios en un mismo proyecto y un docker-compose.yml configurado, puedes levantar ambos servicios juntos con:
-
-docker compose up --build
-
-Esto levantará ambos servicios en sus respectivos puertos (ejemplo: clientes en 8080, productos en 8081).
-
-Puedes probar ambos microservicios simultáneamente desde Postman o tu cliente REST favorito.
 
 ---
 

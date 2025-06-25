@@ -36,22 +36,37 @@ public class ClienteServiceTestMock {
         cliente.setTelefono("999888777");
     }
 
+@Test
+public void testGuardarYBuscarClienteMock() {
+    // Secuencia de respuestas para findByEmail
+    when(clienteRepository.findByEmail(cliente.getEmail()))
+        .thenReturn(Optional.empty())        // No existe al guardar
+        .thenReturn(Optional.of(cliente));   // Existe al buscar luego
+
+    when(clienteRepository.save(cliente)).thenReturn(cliente);
+
+    Cliente guardado = clienteService.save(cliente);
+    Optional<Cliente> encontrado = clienteService.findByEmail(cliente.getEmail());
+
+    assertThat(guardado).isNotNull();
+    assertThat(encontrado).isPresent();
+    assertThat(encontrado.get().getNombre()).isEqualTo("Test Service Cliente");
+
+    verify(clienteRepository, times(2)).findByEmail(cliente.getEmail());
+    verify(clienteRepository).save(cliente);
+}
+
     @Test
-    public void testGuardarYBuscarClienteMock() {
-        // Simular que no existe cliente con ese email para que pase el guardado
-        when(clienteRepository.findByEmail(cliente.getEmail())).thenReturn(Optional.empty());
-        when(clienteRepository.save(cliente)).thenReturn(cliente);
+    public void testEliminarClienteMock() {
+        // Simulamos que el cliente existe
         when(clienteRepository.findByEmail(cliente.getEmail())).thenReturn(Optional.of(cliente));
+        doNothing().when(clienteRepository).delete(cliente);
 
-        Cliente guardado = clienteService.save(cliente);
-        Optional<Cliente> encontrado = clienteService.findByEmail(cliente.getEmail());
+        boolean eliminado = clienteService.deleteByEmail(cliente.getEmail());
 
-        assertThat(guardado).isNotNull();
-        assertThat(encontrado).isPresent();
-        assertThat(encontrado.get().getNombre()).isEqualTo("Test Service Cliente");
+        assertThat(eliminado).isTrue();
 
         verify(clienteRepository).findByEmail(cliente.getEmail());
-        verify(clienteRepository).save(cliente);
-        verify(clienteRepository, times(2)).findByEmail(cliente.getEmail());
+        verify(clienteRepository).delete(cliente);
     }
 }
