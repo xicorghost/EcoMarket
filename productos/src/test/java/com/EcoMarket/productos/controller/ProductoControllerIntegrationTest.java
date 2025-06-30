@@ -1,5 +1,6 @@
 package com.ecomarket.productos.controller;
 
+import com.ecomarket.ecomarket.productos.controller.ProductoController;
 import com.ecomarket.productos.model.Producto;
 import com.ecomarket.productos.service.ProductoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
